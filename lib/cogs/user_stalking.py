@@ -9,20 +9,11 @@ class UserStalking(Cog):
 
 	def rating_to_color(self,rating):
 		"""
-		returns (r, g, b) pixels values corresponding to rating
+		returns hex value corresponding to rating
 		"""
-		colors = [0xCCCCCC,
-		0x77FF77,
-		0x77DDBB,
-		0xAAAAFF,
-		0xFF88FF,
-		0xFFCC88,
-		0xFFBB55,
-		0xFF7777,
-		0xFF3333,
-		0xAA0000]
+		colors = [0xCCCCCC,0x77FF77,0x77DDBB,0xAAAAFF,0xFF88FF,0xFFCC88,0xFFBB55,0xFF7777,0xFF3333,0xAA0000]
 
-		if rating is None or rating<1200:
+		if rating == "Unrated" or rating<1200:
 			return colors[0]
 		elif rating >= 1200 and rating < 1400:
 			return colors[1]
@@ -47,7 +38,10 @@ class UserStalking(Cog):
 	@command(name="stalk",aliases=["stk"],brief='Gives at most 5 latest submission done by the username provided')
 	@cooldown(1,60*5,BucketType.user)
 	async def stalk(self,ctx,username: str):
-		
+		"""
+		By the help of this command one can see the recent submissions made by the codeforces username specified and hence can stalk him :)
+		#TODO: Modify the embed by adding problem links thus by removing add feild and adding them to the description
+		"""
 		url = f"https://codeforces.com/api/user.status?handle={username}&from=1&count=5"
 		async with request('GET',url,headers={}) as response:
 			if response.status == 200:
@@ -69,16 +63,19 @@ class UserStalking(Cog):
 	@command(name="profile",aliases=["prof"],brief='Displays the profile of the provided username')
 	@cooldown(1,15,BucketType.user)
 	async def get_profile(self,ctx,username: str):
+		"""
+		This command is helpful for viewing the basic profile of the codeforces username specified
+		"""
 		url = f"https://codeforces.com/api/user.info?handles={username}"
 		async with request('GET',url,headers={}) as response:
 			if response.status == 200:
 				stalk_embed = Embed(title=f"Profile of *{username}* !")
 				data = await response.json()
 				data = data['result'][0]
-				if data["rating"] is None:
-					rating = "Unrated"
-				else:
+				try:
 					rating = data["rating"]
+				except:
+					rating = "Unrated"
 				rank = data["rank"]
 				max_rating = data["maxRating"]
 				avatar_url = "https:"+data["avatar"]

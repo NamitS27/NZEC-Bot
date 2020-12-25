@@ -1,15 +1,5 @@
 aiohttp==3.6.3
 APScheduler==3.6.3
-async-timeout==3.0.1
-attrs==20.3.0
-chardet==3.0.4
 DateTime==4.3
 discord-ext-menus==1.0.0a27+g6f2b873
 discord.py==1.5.1
-idna==2.10
-multidict==4.7.6
-pytz==2020.5
-six==1.15.0
-tzlocal==2.1
-yarl==1.5.1
-zope.interface==5.2.0
