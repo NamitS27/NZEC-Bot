@@ -7,7 +7,7 @@ import datetime as dt
 import matplotlib.pyplot as plt 
 import matplotlib.dates as mdates
 import os
-from collections import namedtuple, deque
+from collections import namedtuple
 
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 
@@ -46,11 +46,30 @@ class Plot(Cog):
 				data = await response.json()
 				data = data["comment"]
 				return False,data,None
+
+	async def generate_solved_problems_ratings(self,username):
+		url=f"https://codeforces.com/api/user.status?handle={username}"
+		async with request('GET',url) as response:
+			if response.status == 200:
+				data = await response.json()
+				data = data["result"]
+				rating = []
+				for problem in data: 
+					try:
+						ratng = problem["problem"]["rating"]
+					except:
+						continue
+					rating.append(ratng)
+				return True,rating
+			else:
+				data = await response.json()
+				data = data["comment"]
+				return False,data
 		
 
 
 	@command(name="plotr",aliases=["pr"])
-	@cooldown(1,60*5,BucketType.user)
+	@cooldown(1,60,BucketType.user)
 	async def plot_rating(self,ctx,username:str,username_2: Optional[str] = None,username_3: Optional[str] = None):
 		"""
 		Rating graph of the username specified will be ploted. Also more than one user but at most of 3 users, rating graph can be plotted with the help of which one can easily compare.
@@ -68,13 +87,13 @@ class Plot(Cog):
 						if username_3_flag:
 							plt.plot(time_3,rating_3,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,label=f"{username_3}")
 						else:
-							await ctx.send(f"Error occured!, **Comment** = {rating_3}")
+							await ctx.send(embed=Embed(description=f"Error occured!, **Comment** = {rating_3}"))
 							return
 				else:
-					await ctx.send(f"Error occured!, **Comment** = {rating_2}")
+					await ctx.send(embed=Embed(description=f"Error occured!, **Comment** = {rating_2}"))
 					return
 		else:
-			await ctx.send(f"Error occured!, **Comment** = {rating_1}")
+			await ctx.send(embed=Embed(description=f"Error occured!, **Comment** = {rating_1}"))
 			return
 		
 		"""
@@ -83,7 +102,7 @@ class Plot(Cog):
 		ymin, ymax = plt.gca().get_ylim()
 		bgcolor = plt.gca().get_facecolor()
 		for rank in RATED_RANKS:
-			plt.axhspan(rank.low, rank.high, facecolor=rank.color_graph, alpha=0.8, edgecolor=bgcolor, linewidth=0.5)
+			plt.axhspan(rank.low, rank.high, facecolor=rank.color_graph, alpha=0.8, edgecolor=bgcolor,markerfacecolor='white', linewidth=0.5)
 
 		locs, labels = plt.xticks()
 		for loc in locs:
@@ -94,9 +113,40 @@ class Plot(Cog):
 		plt.title('Rating Graph')
 		plt.legend()
 		plt.savefig("rating_graph.png")
+		plt.gcf().clear()
+		plt.close()
 
 		await ctx.send(file=File("rating_graph.png"))
 		os.remove("rating_graph.png")
+
+	@command(name="plots",aliases=["ps"])
+	async def plot_solved_graph(self,ctx,username: str,username_2: str,*,other_usernames:Optional[str] = None):
+		usernames = [username,username_2]
+		if other_usernames is not None:
+			usernames += other_usernames.split(" ")
+		hist_ratings = []
+		labels = []
+		for username in usernames:
+			flag,rating = await self.generate_solved_problems_ratings(username)
+			if flag:
+				hist_ratings.append(rating)
+				labels.append(f"{username}: {len(rating)}")
+				continue
+			else:
+				await ctx.send(embed=Embed(title="Error!",description=rating))
+				return
+		
+		plt.grid(color='grey',alpha=0.9,linestyle='-',linewidth=0.3)
+		plt.hist(hist_ratings)
+		plt.legend(labels)
+		plt.xlabel("Rating")
+		plt.ylabel("Number of Problems Solved")
+		plt.title("Comparison!")
+		plt.savefig("histograms_solved.png")
+		plt.gcf().clear()
+		plt.close()
+		await ctx.send(file=File("histograms_solved.png"))
+		os.remove("histograms_solved.png")
 
 	@Cog.listener()
 	async def on_ready(self):
