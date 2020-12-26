@@ -36,24 +36,28 @@ class UserStalking(Cog):
 
 
 	@command(name="stalk",aliases=["stk"],brief='Gives at most 5 latest submission done by the username provided')
-	@cooldown(1,60*5,BucketType.user)
+	@cooldown(1,60*2,BucketType.user)
 	async def stalk(self,ctx,username: str):
 		"""
 		By the help of this command one can see the recent submissions made by the codeforces username specified and hence can stalk him :)
-		#TODO: Modify the embed by adding problem links thus by removing add feild and adding them to the description
 		"""
 		url = f"https://codeforces.com/api/user.status?handle={username}&from=1&count=5"
 		async with request('GET',url,headers={}) as response:
 			if response.status == 200:
-				stalk_embed = Embed(title=f"Recent Submissions of user {username}")
+				
 				data = await response.json()
 				data = data['result']
+				desc = ""
 				for submission  in data:
 					index = submission["problem"]["index"]
+					contest_id = submission["problem"]["contestId"]
 					problem_name = submission["problem"]["name"]
 					rating = submission["problem"]["rating"]
 					verdict = submission["verdict"]
-					stalk_embed.add_field(name=f"[{index}] {problem_name}",value=f"Rating : {rating} | Verdict : {verdict}",inline=False)
+					link = f'https://www.codeforces.com/problemset/problem/{contest_id}/{index}'
+					desc += f'[{index}. {problem_name}]({link})\nRating : {rating} | Verdict : {verdict}\n\n'
+				
+				stalk_embed = Embed(title=f"Recent Submissions of user {username}",description=desc)
 				await ctx.send(embed=stalk_embed)
 			else:
 				data = await response.json()

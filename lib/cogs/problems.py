@@ -50,7 +50,7 @@ class Problems(Cog):
 
 
 	@command(name="getproblems",aliases=["getp"])
-	@cooldown(1,60,BucketType.user)
+	@cooldown(1,60*2,BucketType.user)
 	async def fetch_problems(self,ctx,username:str,min_rating:int,max_rating:int,*,tags: Optional[str] = ""):
 		"""
 		Gives the list of the problems on the basis of the codeforces username and the problems will be in the range of [minimum rating,maximum rating] as specified by the user. Also the user can specify the tags using "tag_name"

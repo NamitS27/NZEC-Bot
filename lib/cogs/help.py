@@ -17,7 +17,7 @@ def syntax(command):
 
 	params = " ".join(params)
 
-	return f"```~{cmd_and_aliases} {params}```"
+	return f"```{cmd_and_aliases} {params}```"
 
 
 class HelpMenu(ListPageSource):
@@ -64,7 +64,7 @@ class Help(Cog):
 
 	@command(name="help")
 	async def show_help(self, ctx, cmd: Optional[str]):
-		"""Shows this message."""
+		"""Welcome to the help command. Seek the required help!"""
 		if cmd is None:
 			menu = MenuPages(source=HelpMenu(ctx, list(self.bot.commands)),
 							 delete_message_after=True,
