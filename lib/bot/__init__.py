@@ -1,7 +1,9 @@
 from discord import Intents
 from glob import glob
 import datetime
+from math import *
 from asyncio import sleep
+import discord
 from discord.ext.commands import Bot as BotBase
 from discord import Embed,File
 from discord.ext.commands import Context
@@ -33,6 +35,19 @@ class Bot(BotBase):
 		self.cogs_ready = Ready()
 		self.scheduler = AsyncIOScheduler()
 		super().__init__(command_prefix=PREFIX,intents=Intents.all())
+
+	def pretty_print_time(self,seconds: int):
+		days, seconds = divmod(seconds, 86400)
+		hours, seconds = divmod(seconds, 3600)
+		minutes, seconds = divmod(seconds, 60)
+		if days>0:
+			return f"{days} days, {hours} hours {minutes} mins and {seconds} secs"
+		elif hours>0:
+			return f"{hours} hours {minutes} mins and {seconds} secs"
+		elif minutes>0:
+			return f"{minutes} mins and {seconds} secs"
+		else:
+			return f"{seconds} secs"
 
 	def setup(self):
 		print(" COGS =",COGS)
@@ -80,7 +95,7 @@ class Bot(BotBase):
 			await ctx.send("One or more required arguments are missing.")
 
 		elif isinstance(exc, CommandOnCooldown):
-			retry_sec = str(datetime.timedelta(seconds=exc.retry_after))
+			retry_sec = self.pretty_print_time(ceil(exc.retry_after))
 			await ctx.send(f"That command is on {str(exc.cooldown.type).split('.')[-1]} cooldown. Try again in {retry_sec}")
 
 		elif hasattr(exc, "original"):
@@ -99,6 +114,7 @@ class Bot(BotBase):
 			while not self.cogs_ready.all_ready():
 				await sleep(0.5)
 			self.ready = True
+			await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="~help"))
 			print("Bot is ready")
 		else:
 			print("Bot reconnected!")

@@ -36,7 +36,7 @@ class UserStalking(Cog):
 
 
 	@command(name="stalk",aliases=["stk"],brief='Gives at most 5 latest submission done by the username provided')
-	@cooldown(1,60*2,BucketType.user)
+	@cooldown(1,60,BucketType.user)
 	async def stalk(self,ctx,username: str):
 		"""
 		By the help of this command one can see the recent submissions made by the codeforces username specified and hence can stalk him :)
@@ -65,7 +65,7 @@ class UserStalking(Cog):
 				await ctx.send(f"Error! : *{data}*")
 
 	@command(name="profile",aliases=["prof"],brief='Displays the profile of the provided username')
-	@cooldown(1,15,BucketType.user)
+	# @cooldown(1,15,BucketType.user)
 	async def get_profile(self,ctx,username: str):
 		"""
 		This command is helpful for viewing the basic profile of the codeforces username specified

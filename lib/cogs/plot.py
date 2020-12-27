@@ -24,6 +24,13 @@ RATED_RANKS = (
     Rank(3000, 10 ** 9, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000)
 )
 
+class ULegend:
+	def __init__(self,s):
+		self.string = s
+
+	def __str__(self):
+		return self.string
+
 class Plot(Cog):
 	def __init__(self,bot):
 		self.bot = bot
@@ -69,23 +76,26 @@ class Plot(Cog):
 
 
 	@command(name="plotr",aliases=["pr"])
-	@cooldown(1,60,BucketType.user)
+	@cooldown(1,30,BucketType.user)
 	async def plot_rating(self,ctx,username:str,username_2: Optional[str] = None,username_3: Optional[str] = None):
 		"""
 		Rating graph of the username specified will be ploted. Also more than one user but at most of 3 users, rating graph can be plotted with the help of which one can easily compare.
 		"""
-		
+		usernames = []
 		username_1_flag,rating_1,time_1 = await self.username_plot(username)
 		if username_1_flag:
-			plt.plot(time_1,rating_1,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,label=f"{username}")
+			plt.plot(time_1,rating_1,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,markerfacecolor='white')
+			usernames.append(f'{username} ({rating_1[len(rating_1)-1]})')
 			if username_2 is not None:
 				username_2_flag,rating_2,time_2 = await self.username_plot(username_2)
 				if username_2_flag:
-					plt.plot(time_2,rating_2,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,label=f"{username_2}")
+					plt.plot(time_2,rating_2,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,markerfacecolor='white')
+					usernames.append(f'{username_2} ({rating_2[len(rating_2)-1]})')
 					if username_3 is not None:
 						username_3_flag,rating_3,time_3 = await self.username_plot(username_3)
 						if username_3_flag:
-							plt.plot(time_3,rating_3,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,label=f"{username_3}")
+							plt.plot(time_3,rating_3,linestyle='-',marker='o',markersize=3,markeredgewidth=0.5,markerfacecolor='white')
+							usernames.append(f'{username_3} ({rating_3[len(rating_3)-1]})')
 						else:
 							await ctx.send(embed=Embed(description=f"Error occured!, **Comment** = {rating_3}"))
 							return
@@ -102,7 +112,7 @@ class Plot(Cog):
 		ymin, ymax = plt.gca().get_ylim()
 		bgcolor = plt.gca().get_facecolor()
 		for rank in RATED_RANKS:
-			plt.axhspan(rank.low, rank.high, facecolor=rank.color_graph, alpha=0.8, edgecolor=bgcolor,markerfacecolor='white', linewidth=0.5)
+			plt.axhspan(rank.low, rank.high, facecolor=rank.color_graph, alpha=0.8, edgecolor=bgcolor, linewidth=0.5)
 
 		locs, labels = plt.xticks()
 		for loc in locs:
@@ -111,7 +121,7 @@ class Plot(Cog):
 		plt.gcf().autofmt_xdate()
 		plt.gca().fmt_xdata = mdates.DateFormatter('%Y:%m:%d')
 		plt.title('Rating Graph')
-		plt.legend()
+		plt.legend([ULegend(username) for username in usernames])
 		plt.savefig("rating_graph.png")
 		plt.gcf().clear()
 		plt.close()
