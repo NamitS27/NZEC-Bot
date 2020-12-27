@@ -60,7 +60,7 @@ class Bot(BotBase):
 	def run(self):
 		print("Running setup...")
 		self.setup()
-		self.TOKEN = "NzkxODk2MTE3MzA1OTMzODI1.X-V0uw.wEhmJtSnH53DQ0VyvWqXdJlqqkE"
+		self.TOKEN = os.environ.get('TOKEN')
 		print("Bot is running..!")
 		super().run(self.TOKEN,reconnect=True)
 
