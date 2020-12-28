@@ -8,6 +8,7 @@ from discord.ext.commands import Bot as BotBase
 from discord import Embed,File
 from discord.ext.commands import Context
 from discord.errors import Forbidden
+from db.database import Database
 from discord.ext.commands import (CommandNotFound, BadArgument, MissingRequiredArgument,CommandOnCooldown)
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import os
@@ -33,6 +34,7 @@ class Bot(BotBase):
 		self.PREFIX = PREFIX
 		self.ready = False
 		self.cogs_ready = Ready()
+		self.db = Database()
 		self.scheduler = AsyncIOScheduler()
 		super().__init__(command_prefix=PREFIX,intents=Intents.all())
 
@@ -50,6 +52,9 @@ class Bot(BotBase):
 			return f"{seconds} secs"
 
 	def setup(self):
+		print("Connecting to database...")
+		self.db.connect()
+		print("Connected to database successfully!!")
 		print(" COGS =",COGS)
 		for cog in COGS:
 			self.load_extension(f"lib.cogs.{cog}")

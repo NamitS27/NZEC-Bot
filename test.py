@@ -29,3 +29,23 @@
 # plt.legend([foo('_abs')])
 # plt.savefig("a.png")
 
+import psycopg2
+
+global conn
+
+try:
+    conn = psycopg2.connect("dbname='nzec-bot' user='postgres' host='127.0.0.1' password='postgres'")
+except:
+    print("ERROR :(")
+
+cur = conn.cursor()
+import datetime as dt
+
+time = dt.datetime.now()
+print(time)
+
+query = f"INSERT INTO server_det(server_id,user_id,cf_username,last_updated_time) VALUES('123','456','namit27','{time}')"
+cur.execute(query)
+conn.commit()
+
+
