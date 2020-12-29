@@ -1,6 +1,6 @@
 import psycopg2
 import datetime as dt
-
+import os
 
 
 class Database:
@@ -10,7 +10,10 @@ class Database:
 
     def connect(self):
         try:
-            conn = psycopg2.connect("dbname='nzec-bot' user='postgres' host='127.0.0.1' password='postgres'")
+            dbname = os.environ.get('DBUNAME')
+            user = os.environ.get('DBUSER')
+            password = os.environ.get('DBPASS')
+            conn = psycopg2.connect(f"dbname='{dbname}' user='{user}' host='127.0.0.1' password='{password}'")
             self.connection = conn
             self.connected = True
         except:

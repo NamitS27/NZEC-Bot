@@ -101,7 +101,7 @@ class Bot(BotBase):
 
 		elif isinstance(exc, CommandOnCooldown):
 			retry_sec = self.pretty_print_time(ceil(exc.retry_after))
-			await ctx.send(f"That command is on {str(exc.cooldown.type).split('.')[-1]} cooldown. Try again in {retry_sec}")
+			await ctx.send(f"That command is on {str(exc.cooldown.type).split('.')[-1]} cooldown. Try again in {retry_sec} :timer:")
 
 		elif hasattr(exc, "original"):
 

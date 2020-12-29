@@ -56,6 +56,7 @@ class UserServer(Cog):
                 return False,data
 
     @command(name="list")
+    @cooldown(1,60,BucketType.guild)
     async def list_users(self,ctx):
         data =  self.bot.db.get_server_users(str(ctx.message.guild.id))
         table = PrettyTable()
