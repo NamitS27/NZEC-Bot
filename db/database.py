@@ -10,10 +10,11 @@ class Database:
 
     def connect(self):
         try:
-            dbname = os.environ.get('DBUNAME')
-            user = os.environ.get('DBUSER')
-            password = os.environ.get('DBPASS')
-            conn = psycopg2.connect(f"dbname='{dbname}' user='{user}' host='127.0.0.1' password='{password}'")
+            dbname = os.environ.get('DATABASE_NAME')
+            user = os.environ.get('DATABASE_USER')
+            password = os.environ.get('DATABASE_PASS')
+            host = os.environ.get('DATABASE_HOST')
+            conn = psycopg2.connect(f"dbname='{dbname}' user='{user}' host='{host}' password='{password}'")
             self.connection = conn
             self.connected = True
         except:

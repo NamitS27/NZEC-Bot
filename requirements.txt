@@ -6,3 +6,4 @@ discord.py==1.5.1
 matplotlib==3.3.3
 typing
 prettytable
+psycopg2
