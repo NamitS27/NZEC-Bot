@@ -49,11 +49,11 @@ class Problems(Cog):
 		return embed
 
 
-	@command(name="getproblems",aliases=["getp"])
+	@command(name="getproblems",aliases=["getp"],brief="Problem Suggestion on basis of arguments")
 	@cooldown(1,60*2,BucketType.user)
 	async def fetch_problems(self,ctx,username:str,min_rating:int,max_rating:int,*,tags: Optional[str] = ""):
 		"""
-		Gives the list of the problems on the basis of the codeforces username and the problems will be in the range of [minimum rating,maximum rating] as specified by the user. Also the user can specify the tags using "tag_name"
+		Gives the list of the problems on the basis of the codeforces username and the problems will be in the range of [minimum rating,maximum rating] as specified by the user. Also the user can specify the tags using "tag_name" (between double quotes)
 		"""
 		tags = ";".join([tag[1:len(tag)-1] for tag in tags.split(' ')])
 		contest_flag,contests = await self.get_contest_ids()

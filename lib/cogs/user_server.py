@@ -8,8 +8,25 @@ class UserServer(Cog):
     def __init__(self,bot):
         self.bot = bot
 
-    @command(name="setu")
+    async def check_username(self,handle):
+        url=f"https://codeforces.com/api/user.info?handles={handle}"
+        async with request('GET',url) as response:
+            if response.status == 200:
+                return True
+            else:
+                return False
+
+
+    @command(name="setu",brief="Setting the cf username with own discord user")
     async def set_user(self,ctx,username):
+        """
+        Sets the codeforces username provided by the user along with the user setting it for that server.
+        """
+        username_test = await self.check_username(username)
+        if not username_test:
+            await ctx.send(embed=Embed(title="Invalid CodeForces username!"))
+            return 
+
         user_id = str(ctx.author.id)
         server_id = str(ctx.message.guild.id)
         data = self.bot.db.fetch_all('server_det')
@@ -24,8 +41,16 @@ class UserServer(Cog):
         else:
             await ctx.send(embed=Embed(description=f"You have already set your CodeForces username\nYou can update it using command `~updateu <new_username>`",colour=0x0037fa))
 
-    @command(name="updateu")
+    @command(name="updateu",brief="Updating the set cf username with own discord user")
     async def update_user(self,ctx,username):
+        """
+        Updates the cf username which was set by the user with their own self.
+        """
+        username_test = await self.check_username(username)
+        if not username_test:
+            await ctx.send(embed=Embed(title="Invalid CodeForces username!"))
+            return 
+
         user_id = str(ctx.author.id)
         server_id = str(ctx.message.guild.id)
         data = self.bot.db.fetch_all('server_det')
@@ -41,6 +66,7 @@ class UserServer(Cog):
             await ctx.send(embed=Embed(description=f"You haven't set your CodeForces username\nYou can set it using command `~setu <cf_username>`",colour=0x0037fa))
 
     async def get_user_rating(self,username):
+        username = ";".join(username)
         url = f"https://codeforces.com/api/user.info?handles={username}"
         async with request('GET',url) as response:
             if response.status == 200:
@@ -55,9 +81,12 @@ class UserServer(Cog):
                 data = data["comment"]
                 return False,data
 
-    @command(name="list")
+    @command(name="list",brief="Listing of server's user list who has set their cf handle")
     @cooldown(1,60,BucketType.guild)
     async def list_users(self,ctx):
+        """
+        Displays the list of the details of the user who has set their cf username along with their own selves
+        """
         data =  self.bot.db.get_server_users(str(ctx.message.guild.id))
         table = PrettyTable()
         table.field_names = ["User","CodeForces Handle","Rating","Rank"]
@@ -66,7 +95,7 @@ class UserServer(Cog):
             usernames.append(cfu)
         flag,rar = await self.get_user_rating(usernames)
         if not flag:
-            await ctx.send("error")
+            await ctx.send(f"Error {rar}")
             return
         cnt = 0
         for pid,sid,uid,cfu,time in data:

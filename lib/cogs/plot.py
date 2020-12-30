@@ -75,11 +75,11 @@ class Plot(Cog):
 		
 
 
-	@command(name="plotr",aliases=["pr"])
+	@command(name="plotr",aliases=["pr"],brief="Plots the codeforces rating graph")
 	@cooldown(1,30,BucketType.user)
 	async def plot_rating(self,ctx,username:str,username_2: Optional[str] = None,username_3: Optional[str] = None):
 		"""
-		Rating graph of the username specified will be ploted. Also more than one user but at most of 3 users, rating graph can be plotted with the help of which one can easily compare.
+		Rating graph of the username specified will be ploted. Also of more than one user but at most of 3 users, rating graph can be plotted with the help of which one can easily compare.
 		"""
 		usernames = []
 		username_1_flag,rating_1,time_1 = await self.username_plot(username)
@@ -129,8 +129,11 @@ class Plot(Cog):
 		await ctx.send(file=File("rating_graph.png"))
 		os.remove("rating_graph.png")
 
-	@command(name="plots",aliases=["ps"])
+	@command(name="plots",aliases=["ps"],brief="Histogram plot of solved problems on codeforces")
 	async def plot_solved_graph(self,ctx,username: str,username_2: str,*,other_usernames:Optional[str] = None):
+		"""
+		Histogram plot of the solved problems of more than one user in order to visualize more clearly how one is performing compared to others.
+		"""
 		usernames = [username,username_2]
 		if other_usernames is not None:
 			usernames += other_usernames.split(" ")

@@ -76,8 +76,13 @@ class Contest(Cog):
 				data = data["comment"]
 				return False,data
 
-	@command(name="mashup",aliases=["cmash"],usage="mashup|cmash <username> [tags]")
+	@command(name="mashup",aliases=["cmash"],usage="mashup|cmash <username> [tags]",brief="Creates a smart mashup of problems")
 	async def create_mashup(self,ctx,*,args: str):
+		"""
+		Creates the mashup of 4 problems on the basis of the arguments which can be given as follows,
+		usernames : the user can give space seperated codeforces handles of the people for whom they wish to create a mashup.
+		tags : tags are to be given space seperated quoted using double quotes("tag") which are used to find the problems related to this tags.
+		"""
 		usernames,tags = self.parse_args(args)
 		solved = []
 		for username in usernames:

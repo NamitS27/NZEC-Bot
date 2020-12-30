@@ -87,14 +87,13 @@ class Bot(BotBase):
 
 	async def on_error(self,err,*args,**kwargs):
 		if err=="on_command_error":
-			await args[0].send("Something went wrong!")
+			await args[0].send(embed=Embed(description="Wrong usage of the command\nExplore the help of the respective command for more details"))
 		
-		# await args[0].send("Something went wrong!")
 		raise 
 
 	async def on_command_error(self,ctx,exc):
 		if any([isinstance(exc, error) for error in IGNORE_EXCEPTIONS]):
-			pass
+			await ctx.send("Contact the developer\nEmail: namitshah2711@gmail.com")
 
 		elif isinstance(exc, MissingRequiredArgument):
 			await ctx.send("One or more required arguments are missing.")

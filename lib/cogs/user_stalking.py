@@ -68,7 +68,7 @@ class UserStalking(Cog):
 	# @cooldown(1,15,BucketType.user)
 	async def get_profile(self,ctx,username: str):
 		"""
-		This command is helpful for viewing the basic profile of the codeforces username specified
+		This command is helpful for viewing the basic profile of the codeforces username specified.
 		"""
 		url = f"https://codeforces.com/api/user.info?handles={username}"
 		async with request('GET',url,headers={}) as response:
