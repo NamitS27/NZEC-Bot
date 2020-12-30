@@ -88,6 +88,9 @@ class UserServer(Cog):
         Displays the list of the details of the user who has set their cf username along with their own selves
         """
         data =  self.bot.db.get_server_users(str(ctx.message.guild.id))
+        if len(data)==0:
+            await ctx.send(embed=Embed(title="There are no cf usernames set to display!"))
+            return
         table = PrettyTable()
         table.field_names = ["User","CodeForces Handle","Rating","Rank"]
         usernames = []
@@ -95,7 +98,7 @@ class UserServer(Cog):
             usernames.append(cfu)
         flag,rar = await self.get_user_rating(usernames)
         if not flag:
-            await ctx.send(f"Error {rar}")
+            await ctx.send(f"ERROR!\n**Comment** :  {rar}")
             return
         cnt = 0
         for pid,sid,uid,cfu,time in data:

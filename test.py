@@ -36,6 +36,10 @@ CREATE TABLE server_det(
     UNIQUE (server_id,user_id)
 );
 """
+
+del_query = """DROP TABLE resources;
+DROP TABLE server_det;"""
+# cur.execute(del_query)
 cur.execute(query)
 conn.commit()
 

@@ -52,10 +52,22 @@ class UserStalking(Cog):
 					index = submission["problem"]["index"]
 					contest_id = submission["problem"]["contestId"]
 					problem_name = submission["problem"]["name"]
-					rating = submission["problem"]["rating"]
-					verdict = submission["verdict"]
+					flag=0
+					try:
+						rating = submission["problem"]["rating"]
+					except:
+						try:
+							flag = 1
+							points = submission["problem"]["points"]
+						except:
+							flag = 2
 					link = f'https://www.codeforces.com/problemset/problem/{contest_id}/{index}'
-					desc += f'[{index}. {problem_name}]({link})\nRating : {rating} | Verdict : {verdict}\n\n'
+					if flag==0:
+						desc += f'[{index}. {problem_name}]({link}) [{rating}]\n\n'
+					elif flag==1:
+						desc += f'[{index}. {problem_name}]({link}) [{int(points)}]\n\n'
+					else:
+						desc += f'[{index}. {problem_name}]({link})\n\n'
 				
 				stalk_embed = Embed(title=f"Recent Submissions of user {username}",description=desc)
 				await ctx.send(embed=stalk_embed)

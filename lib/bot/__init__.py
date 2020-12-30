@@ -87,7 +87,7 @@ class Bot(BotBase):
 
 	async def on_error(self,err,*args,**kwargs):
 		if err=="on_command_error":
-			await args[0].send(embed=Embed(description="Wrong usage of the command\nExplore the help of the respective command for more details"))
+			await args[0].send(embed=Embed(description="Wrong usage of the command\nExplore the help of the respective command for more details\n\nOR\n\n Note: If you think that you are using the command correctly then contact the developer (Email: namitshah2711@gmail.com) "))
 		
 		raise 
 

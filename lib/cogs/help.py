@@ -23,11 +23,11 @@ def syntax(command):
 class HelpMenu(ListPageSource):
 	def __init__(self, ctx, data):
 		self.ctx = ctx
-		super().__init__(data, per_page=4)
+		super().__init__(data, per_page=3)
 
 	async def write_page(self, menu, fields=[]):
 		offset = (menu.current_page*self.per_page) + 1
-		len_data = len(self.entries)-2 # remove 2 after resources commands are added
+		len_data = len(self.entries)
 
 		embed = Embed(title="Help",
 					  description="Welcome to the NZEC help dialog!",
@@ -44,8 +44,6 @@ class HelpMenu(ListPageSource):
 		fields = []
 
 		for entry in entries:
-			if entry.name in ("addr","findr"): # remove this after resources commands are added
-				continue
 			if entry.name=="mashup":
 				fields.append((entry.brief or "No description", f"```\n{entry.usage}\n```"))
 			else:
