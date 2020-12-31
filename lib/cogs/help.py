@@ -30,7 +30,7 @@ class HelpMenu(ListPageSource):
 		len_data = len(self.entries)
 
 		embed = Embed(title="Help",
-					  description="Welcome to the NZEC help dialog!",
+					  description="Welcome to the NZEC help dialog! Command Prefix = '~'",
 					  colour=self.ctx.author.colour)
 		#embed.set_thumbnail(url=self.ctx.guild.me.avatar_url)
 		embed.set_footer(text=f"{offset:,} - {min(len_data, offset+self.per_page-1):,} of {len_data:,} commands.")
@@ -67,8 +67,9 @@ class Help(Cog):
 	@command(name="help",brief="Help command for respective commands")
 	async def show_help(self, ctx, cmd: Optional[str]):
 		"""
-		Welcome to the help command. Seek the required help!
-		Get the help of the respective command by addind an argument of the command name along with the help.
+		Welcome to the help command. Seek the required help.
+		Commands are to be executed using the prefix '~'. For eg. `~help` or `~plotr tourist`.
+		Get the help of the respective commands by adding an argument of the command name along with the help to get more details about how to execute the command.
 		"""
 		
 		if cmd is None:

@@ -70,6 +70,8 @@ class Problems(Cog):
 					give_problem = []
 					cnt = 0
 					for problem in data:
+						if "*special" in problem['tags']:
+							continue
 						try:
 							rating = problem['rating']
 						except:

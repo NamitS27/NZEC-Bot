@@ -1,5 +1,5 @@
-from discord.ext.commands import Cog
-from discord.ext.commands import command,BadArgument
+from discord.ext.commands import Cog, BucketType
+from discord.ext.commands import command,BadArgument, cooldown
 from discord import Embed
 from aiohttp import request
 import random
@@ -77,6 +77,7 @@ class Contest(Cog):
 				return False,data
 
 	@command(name="mashup",aliases=["cmash"],usage="mashup|cmash <username> [tags]",brief="Creates a smart mashup of problems")
+	@cooldown(1,30,BucketType.guild)
 	async def create_mashup(self,ctx,*,args: str):
 		"""
 		Creates the mashup of 4 problems on the basis of the arguments which can be given as follows,
