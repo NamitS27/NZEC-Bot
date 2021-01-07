@@ -1,5 +1,5 @@
 <p align="center">
-<img src="/images/icon.jpg"  width=200/>
+<img src="/images/icon.jpg"  width=100/>
 </p>
 
 <h3 align='center'>NZEC Discord Bot</h3>
