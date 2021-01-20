@@ -41,6 +41,8 @@
 
 Click [here](http://bit.ly/nzec_bot) to add to your discord server!
 
+> **Note**: As I am out of free hours the bot will be offline,so you can mail me on namitshah2711@gmail.com to make the bot online and enjoy it!
+
 To know more about how to use the bot commands, type `~help` after adding bot to your server.
 
 
